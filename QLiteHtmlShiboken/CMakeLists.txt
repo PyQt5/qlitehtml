@@ -30,12 +30,21 @@ endif()
 
 message("PYSIDEPATH: ${PYSIDEPATH}")
 
-string(REPLACE ";" ":" QtWidgets_INCLUDE_DIRS
-               "${Qt${QT_VERSION_MAJOR}Widgets_INCLUDE_DIRS}")
-string(REPLACE ";" ":" QtGui_INCLUDE_DIRS
-               "${Qt${QT_VERSION_MAJOR}Gui_INCLUDE_DIRS}")
-string(REPLACE ";" ":" QtCore_INCLUDE_DIRS
-               "${Qt${QT_VERSION_MAJOR}Core_INCLUDE_DIRS}")
+if(CMAKE_HOST_UNIX)
+  string(REPLACE ";" ":" QtWidgets_INCLUDE_DIRS
+                 "${Qt${QT_VERSION_MAJOR}Widgets_INCLUDE_DIRS}")
+  string(REPLACE ";" ":" QtGui_INCLUDE_DIRS
+                 "${Qt${QT_VERSION_MAJOR}Gui_INCLUDE_DIRS}")
+  string(REPLACE ";" ":" QtCore_INCLUDE_DIRS
+                 "${Qt${QT_VERSION_MAJOR}Core_INCLUDE_DIRS}")
+  set(INCLUDE_DIRS
+      "${CMAKE_CURRENT_SOURCE_DIR}/../qlitehtml/src:${QtCore_INCLUDE_DIRS}:${QtGui_INCLUDE_DIRS}:${QtWidgets_INCLUDE_DIRS}"
+  )
+else()
+  set(INCLUDE_DIRS
+      "${CMAKE_CURRENT_SOURCE_DIR}/../qlitehtml/src;${Qt${QT_VERSION_MAJOR}Widgets_INCLUDE_DIRS};${Qt${QT_VERSION_MAJOR}Gui_INCLUDE_DIRS};${Qt${QT_VERSION_MAJOR}Core_INCLUDE_DIRS}"
+  )
+endif()
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/project.toml.in"
                "${CMAKE_CURRENT_SOURCE_DIR}/project.toml")
