@@ -30,6 +30,33 @@ public:
 
     // using ResourceHandler = std::function<QByteArray(QUrl)>;
     // void setResourceHandler(const ResourceHandler &handler);
+    void setResourceHandler(SIP_PYCALLABLE /AllowNone/);
+%MethodCode
+        if (a0 == Py_None || a0 == OnResourceHandler) {
+            sipCpp->setResourceHandler(nullptr);
+        } else {
+            Py_XDECREF(OnResourceHandler);
+            OnResourceHandler = a0;
+            Py_INCREF(OnResourceHandler);
+            sipCpp->setResourceHandler([&](const QUrl &url) {
+                PyObject *res = sipCallMethod(0, OnResourceHandler, "D", &url, sipType_QUrl);
+                QByteArray result;
+                if (res != nullptr) {
+                    PyObject *buf = Py_None;
+                    sipParseResult(0, OnResourceHandler, res, "O", &buf);
+                    if (buf != Py_None && SIPBytes_Check(buf))
+                    {
+                        result = QByteArray::fromRawData(SIPBytes_AsString(buf), SIPBytes_Size(buf));
+                        Py_DECREF(buf);
+                        buf = NULL;
+                    }
+                }
+                Py_XDECREF(res);
+                res = NULL;
+                return result;
+            });
+        }
+%End
 
     QString selectedText() const;
 
@@ -62,3 +89,7 @@ private:
     QRect toVirtual(const QRect &r) const;
     QRect fromVirtual(const QRect &r) const;
 };
+
+%ModuleHeaderCode
+static PyObject *OnResourceHandler = 0;
+%End
