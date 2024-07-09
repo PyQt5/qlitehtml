@@ -18,4 +18,4 @@ set(QLITEHTML_LIBRARY_TYPE STATIC)
 
 add_subdirectory(qlitehtml)
 add_subdirectory(QLiteHtmlSip)
-add_subdirectory(QLiteHtmlShiboken)
+# add_subdirectory(QLiteHtmlShiboken)

@@ -26,7 +26,7 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/pyproject.toml.in"
 add_custom_target(
   ${PROJECT_NAME} ALL
   COMMAND
-    sip-build --verbose --qmake="${QT_QMAKE_EXECUTABLE}"
+    sip-install --verbose --qmake="${QT_QMAKE_EXECUTABLE}"
     --build-dir="${CMAKE_BINARY_DIR}/${PROJECT_NAME}/build"
     --target-dir="${CMAKE_INSTALL_PREFIX}"
     --api-dir="${CMAKE_INSTALL_PREFIX}/PyQt5"
@@ -37,9 +37,16 @@ add_custom_target(
           sip/QLiteHtmlWidget/QLiteHtmlWidgetmod.sip
   WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 
+set(LIBEXT "*")
+if(CMAKE_HOST_WIN32)
+  set(LIBEXT "pyd")
+endif()
+
 add_custom_target(
   ${PROJECT_NAME}COPY ALL
-  COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_INSTALL_PREFIX}/QLiteHtmlWidget.*"
-          "${CMAKE_INSTALL_PREFIX}/PyQt5/"
-  COMMAND ${CMAKE_COMMAND} -E remove "${CMAKE_INSTALL_PREFIX}/QLiteHtmlWidget.*"
+  COMMAND
+    ${CMAKE_COMMAND} -E copy "${CMAKE_INSTALL_PREFIX}/QLiteHtmlWidget.${LIBEXT}"
+    "${CMAKE_INSTALL_PREFIX}/PyQt5/"
+  COMMAND ${CMAKE_COMMAND} -E remove
+          "${CMAKE_INSTALL_PREFIX}/QLiteHtmlWidget.${LIBEXT}"
   DEPENDS ${PROJECT_NAME})
