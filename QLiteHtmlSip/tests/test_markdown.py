@@ -34,6 +34,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
+        self._cpath = ""
         self._changeTimer = QTimer(self)
         self._changeTimer.setSingleShot(True)
         self._changeTimer.timeout.connect(self.onChange)
@@ -51,11 +52,20 @@ class MainWindow(QMainWindow):
         self._mainWidget.addWidget(self._textEdit)
         self._mainWidget.addWidget(self._htmlWidget)
         self.setCentralWidget(self._mainWidget)
-        self._htmlWidget.setResourceHandler(self.onHandler)
+        self._htmlWidget.setResourceHandler(self.onResourceHandler)
+        self._htmlWidget.linkClicked.connect(self.onLinkClicked)
 
-    def onHandler(self, url):
-        print(url)
+    def onResourceHandler(self, url):
+        try:
+            url = url.url().lstrip("/")
+            print(os.path.join(self._cpath, url))
+            return open(os.path.join(self._cpath, url), "rb").read()
+        except Exception as e:
+            print("onHandler:", e)
         return b""
+
+    def onLinkClicked(self, url):
+        print("onLinkClicked:", url)
 
     def sizeHint(self):
         return QSize(800, 600)
@@ -66,7 +76,7 @@ class MainWindow(QMainWindow):
         )
         if fileName:
             self.setWindowTitle(fileName)
-            os.chdir(os.path.dirname(fileName))
+            self._cpath = os.path.dirname(fileName)
             try:
                 with open(fileName, "r", encoding="utf-8") as f:
                     self._textEdit.setPlainText(f.read())
