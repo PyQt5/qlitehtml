@@ -17,6 +17,5 @@ set(CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}/dist")
 set(QLITEHTML_LIBRARY_TYPE STATIC)
 
 add_subdirectory(qlitehtml)
-add_subdirectory(QLiteHtmlWidgetWrap)
-# add_subdirectory(QLiteHtmlSip)
+add_subdirectory(QLiteHtmlSip)
 # add_subdirectory(QLiteHtmlShiboken)
