@@ -38,7 +38,7 @@ if(CMAKE_HOST_UNIX)
   string(REPLACE ";" ":" QtCore_INCLUDE_DIRS
                  "${Qt${QT_VERSION_MAJOR}Core_INCLUDE_DIRS}")
   set(INCLUDE_DIRS
-      "${CMAKE_CURRENT_SOURCE_DIR}/../qlitehtml/src:${QtCore_INCLUDE_DIRS}:${QtGui_INCLUDE_DIRS}:${QtWidgets_INCLUDE_DIRS}"
+      "${CMAKE_CURRENT_SOURCE_DIR}/../qlitehtml/src:${QtCore_INCLUDE_DIRS}:${QtGui_INCLUDE_DIRS}:${QtWidgets_INCLUDE_DIRS}:/lib/gcc/x86_64-linux-gnu/12/include"
   )
 else()
   set(INCLUDE_DIRS

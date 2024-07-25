@@ -1,7 +1,6 @@
 [generator-project]
 generator-set = shiboken
-debug-level = full
-output-directory = out
+output-directory = ${CMAKE_BINARY_DIR}/${PROJECT_NAME}/build
 header-file = ${CMAKE_CURRENT_SOURCE_DIR}/../qlitehtml/src/qlitehtmlwidget.h
 typesystem-file = typesystem_QLiteHtmlWidget.xml
 include-path = ${INCLUDE_DIRS}
